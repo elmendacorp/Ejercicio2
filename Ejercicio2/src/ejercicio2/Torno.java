@@ -15,19 +15,22 @@ public class Torno implements Runnable {
     ColaEspera colaAtraccion;
     Plataforma plataforma;
     Pasajero pasajero;
-    Semaphore Semtorno;
-    Semaphore Semcoche;
-    Torno(ColaEspera cola ,Semaphore torno,Semaphore coche){
+    Semaphore torno;
+    Torno(ColaEspera cola, Plataforma miplataforma,Semaphore torno ){
+        this.torno=torno;
         this.colaAtraccion = cola;
         pasajero = new Pasajero();
-        this.Semtorno=torno;
-        this.Semcoche=coche;
+        this.plataforma=miplataforma;
+       
     }
     @Override
     public void run(){
         while(true){
-            pasajero= colaAtraccion.salida(Semtorno);
-            plataforma.entrada(pasajero,Semcoche);
+            while(!torno.tryAcquire()){
+                System.out.print("Torno bloqueado\n");
+            }
+            pasajero= colaAtraccion.salida();
+            plataforma.entrada(pasajero);
         }
     }
     

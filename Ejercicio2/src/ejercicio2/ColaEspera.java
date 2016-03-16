@@ -15,28 +15,26 @@ import java.util.concurrent.TimeUnit;
  */
 public class ColaEspera {
     
-    int cola,huecos,ocupados;
+    int huecos,ocupados;
     static int tamanio;
     Queue <Pasajero> buffer;
     
     ColaEspera(){
-        cola=0;
         huecos=tamanio;
         ocupados=0;
     }
-    public synchronized void llegadaPasajero(Pasajero p,Semaphore torno){
+    public synchronized void llegadaPasajero(Pasajero p){
         while(huecos==0){
             p.espera();
         }
         buffer.add(p);
-        cola = (cola+1)%tamanio;
         huecos--;
         ocupados++;
         try{
-            torno.acquire();
+            
         }catch(Exception ex){}
     }
-    public synchronized Pasajero salida(Semaphore torno){
+    public synchronized Pasajero salida(){
         while(ocupados == 0){
             try{
                 System.out.print("Pasajero esperando en la cola\n");
@@ -46,7 +44,6 @@ public class ColaEspera {
         Pasajero p= buffer.remove();
         ocupados--;
         huecos++;
-        torno.release(1);
         return p;
     }
 }

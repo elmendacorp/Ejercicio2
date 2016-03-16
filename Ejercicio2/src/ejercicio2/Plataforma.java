@@ -18,33 +18,38 @@ public class Plataforma {
     boolean lleno;
     static int tamanio;
     Queue <Pasajero> buffer;
-    Plataforma(){
+    Semaphore micoche;
+    ColaEspera entrada;
+    Plataforma(ColaEspera micola, Semaphore coche){
+        this.entrada=micola;
+        this.micoche=coche;
         huecos=tamanio;
         lleno=false;
     }
-    public synchronized void entrada(Pasajero p,Semaphore coche){
+    public synchronized void entrada(Pasajero p){
         while(huecos==0){
             try{
-                System.out.print("Pasajero esperando en plataforma\n");
-                TimeUnit.SECONDS.sleep(2);
+                p.espera();
             }catch(Exception ex){}
         }
         buffer.add(p);
         huecos--;
         if(huecos==0){
             lleno=true;
-            coche.release();
+            micoche.release();
         }
     }
-    public synchronized void subirCoche(Semaphore torno){
-        while(!lleno){
+    public synchronized void subirCoche(){
+        while(lleno){
             try{
                 System.out.print("Vaciando la plataforma\n");
                 TimeUnit.SECONDS.sleep(2);
             }catch(Exception ex){}
         }
+        buffer.clear();
         huecos = tamanio;
         lleno=false;
-        torno.release();
+        
+        
     }
 }

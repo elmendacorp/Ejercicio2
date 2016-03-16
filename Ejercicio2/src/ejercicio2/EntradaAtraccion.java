@@ -13,23 +13,17 @@ import java.util.concurrent.Semaphore;
  */
 public class EntradaAtraccion implements Runnable{
     Semaphore torno;
-    Semaphore coche;
-    Torno entrar;
-    Coche cacharrico;
     ColaEspera atraccion;
     Pasajero p;
     static int tamanio;
-    EntradaAtraccion(){
-        atraccion = new ColaEspera();
-        p= new Pasajero();
-        torno = new Semaphore(tamanio);
-        entrar = new Torno(atraccion,torno,coche);
+    EntradaAtraccion(ColaEspera micola){
+        this.atraccion=micola;
     }
     @Override
     public void run(){
         while(true){
             Pasajero in= new Pasajero();
-           atraccion.llegadaPasajero(in, torno);
+            atraccion.llegadaPasajero(in);
         }
     }
     

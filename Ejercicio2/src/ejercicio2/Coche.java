@@ -6,6 +6,7 @@
 package ejercicio2;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -13,17 +14,24 @@ import java.util.concurrent.Semaphore;
  */
 public class Coche implements Runnable{
     Semaphore coche;
-    Semaphore torno;
     Plataforma plataformaAtraccion;
-    Coche(Semaphore torno, Semaphore coche,Plataforma plataforma){
-        this.torno=torno;
-        this.coche= coche;
+    ColaEspera colaAtraccion;
+    Coche(Plataforma plataforma, ColaEspera micola, Semaphore coche){
+        this.coche=coche;
         this.plataformaAtraccion=plataforma;
+        this.colaAtraccion= micola;
     }
     @Override
     public void run(){
         while(true){
-            plataformaAtraccion.subirCoche(torno);
+            while(!coche.tryAcquire()){
+                System.out.print("Coche en espera\n");
+                try{
+                TimeUnit.SECONDS.sleep(5);
+                }catch(Exception ex){}
+            }
+            System.out.print("Coche saliendo");
+            plataformaAtraccion.subirCoche();
             
         }
     }

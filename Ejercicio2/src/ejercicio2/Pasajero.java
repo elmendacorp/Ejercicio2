@@ -5,19 +5,19 @@
  */
 package ejercicio2;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author Fran
  */
 public class Pasajero extends Thread{
-    Thread entrar;
     Pasajero(){
-        entrar=new Thread();
-        entrar.start();
     }
     void espera(){
         try{
-        entrar.wait(2000);
+        System.out.print("Pasajero esperando en plataforma\n");
+        TimeUnit.SECONDS.sleep(2);
         }catch(Exception ex){}
     }
 }
